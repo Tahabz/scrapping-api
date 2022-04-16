@@ -22,6 +22,8 @@ app.use('/', scrapRouter)
 
 app.get('/', (req, res) => res.json(req.user))
 
+app.get('*', (req, res) => res.status(404).json("service doesn't exist"))
+
 async function start () {
   await connect()
   app.listen(process.env.PORT, () => {
