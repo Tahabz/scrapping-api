@@ -1,15 +1,23 @@
 const express = require('express')
 const morgan = require('morgan')
 const dotenv = require('dotenv')
+const cookieParser = require('cookie-parser')
 const connect = require('./db/connect')
+const userAuth = require('./middlewares/user')
+const { userRouter } = require('./routes/user')
 
-dotenv.config()
 const app = express()
-
-start().catch(console.error)
-
 app.use(morgan('dev'))
 app.use(express.json())
+app.use(cookieParser())
+dotenv.config()
+
+start().catch(console.error)
+app.use(userRouter)
+app.use(userAuth)
+app.use(express.json())
+
+app.get('/', (req, res) => res.end('hello world'))
 
 async function start () {
   await connect()
