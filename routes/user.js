@@ -2,6 +2,7 @@ const { Router } = require('express')
 const jsonwebtoken = require('jsonwebtoken')
 const dotenv = require('dotenv')
 const { User } = require('../models/User')
+const userAuth = require('../middlewares/user')
 
 dotenv.config()
 const userRouter = Router()
@@ -43,6 +44,13 @@ userRouter.post('/register', async (req, res, next) => {
     if (e.code === 11000) return res.json('username already exists')
     return res.json('internal server error')
   }
+})
+
+userRouter.get('/credit', userAuth, async (req, res, next) => {
+  const username = req.user.username
+  const user = await User.findOne({ username })
+  if (!user) return res.status(400).json('error occured')
+  return res.json({ credit: user.credit })
 })
 
 module.exports = { userRouter }
