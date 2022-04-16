@@ -5,19 +5,22 @@ const cookieParser = require('cookie-parser')
 const connect = require('./db/connect')
 const userAuth = require('./middlewares/user')
 const { userRouter } = require('./routes/user')
+const { scrapRouter } = require('./routes/scrap')
 
 const app = express()
-app.use(morgan('dev'))
-app.use(express.json())
-app.use(cookieParser())
 dotenv.config()
 
 start().catch(console.error)
-app.use(userRouter)
-app.use(userAuth)
-app.use(express.json())
 
-app.get('/', (req, res) => res.end('hello world'))
+app.use(morgan('dev'))
+app.use(express.json())
+app.use(cookieParser())
+
+app.use('/', userRouter)
+app.use(userAuth)
+app.use('/', scrapRouter)
+
+app.get('/', (req, res) => res.json(req.user))
 
 async function start () {
   await connect()

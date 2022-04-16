@@ -15,6 +15,6 @@ module.exports = async (req, res, next) => {
     req.user = jwt.verify(token, process.env.JWT_SECRET)
     next()
   } catch (e) {
-    return res.status(401).json(e.message)
+    return res.status(401).json('not allowed')
   }
 }
