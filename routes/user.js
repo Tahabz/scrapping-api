@@ -40,6 +40,7 @@ userRouter.post('/register', async (req, res, next) => {
     return res.json(token)
   } catch (e) {
     console.error(e)
+    if (e.code === 11000) return res.json('username already exists')
     return res.json('internal server error')
   }
 })
